@@ -30,6 +30,7 @@ for lnglat in coord_list:
 
     projected_coord_list.append([a,b])
 
+additional_data = resp_data['features'][0]['properties']
 out_data = {
     "type":"FeatureCollection",
     "features":[
@@ -39,7 +40,9 @@ out_data = {
             "geometry":{
                 "type":"LineString",
                 "coordinates":projected_coord_list
-            }
+            },
+            "properties":additional_data,
+
          }
     ]
 }
