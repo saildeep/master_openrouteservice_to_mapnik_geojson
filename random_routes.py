@@ -14,7 +14,7 @@ def pick_lat_lng():
 
 
 normed_lengths = []
-for i in range(10):
+for i in range(100):
     start = pick_lat_lng()
     end = pick_lat_lng()
     try:
@@ -36,5 +36,5 @@ for i in range(10):
         print(e)
         continue
     sleep(2)
-plt.hist(normed_lengths)
+plt.hist(normed_lengths,bins=10)
 plt.show()
