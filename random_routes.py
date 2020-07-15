@@ -14,7 +14,7 @@ def pick_lat_lng():
 
 
 normed_lengths = []
-for i in range(100):
+for i in range(25):
     start = pick_lat_lng()
     end = pick_lat_lng()
     try:
@@ -30,7 +30,7 @@ for i in range(100):
             normed_length.append(t/total_length)
             t+=step['distance']
         single_distances = list(map(lambda x:x['distance'],steps))
-        normed_lengths.append(normed_length)
+        normed_lengths= normed_lengths +normed_length
 
     except ConnectionError as e:
         print(e)
