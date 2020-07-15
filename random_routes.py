@@ -13,6 +13,7 @@ def pick_lat_lng():
     return (random.uniform(from_lat,to_lat),random.uniform(from_lng,to_lng))
 
 
+normed_lengths = []
 for i in range(10):
     start = pick_lat_lng()
     end = pick_lat_lng()
@@ -22,14 +23,18 @@ for i in range(10):
         steps =props['segments'][0]['steps']
         t =0
         timesteps = []
-
+        normed_length = []
+        total_length = props['summary']['distance']
         for step in steps:
             timesteps.append(t)
+            normed_length.append(t/total_length)
             t+=step['distance']
-        plt.plot(timesteps)
+        single_distances = list(map(lambda x:x['distance'],steps))
+        normed_lengths.append(normed_length)
 
-    except AssertionError as e:
+    except ConnectionError as e:
         print(e)
         continue
-    sleep(1)
+    sleep(2)
+plt.hist(normed_lengths)
 plt.show()
