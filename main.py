@@ -5,12 +5,13 @@ from pyproj import transform,Proj, Transformer
 
 
 
-def get_route(sLat,sLng,eLat,eLng,toproj='epsg:4326'):
+def get_route(sLat,sLng,eLat,eLng,key,toproj='epsg:4326'):
     endpoint = "https://api.openrouteservice.org/v2/directions/driving-car/geojson"
     data = {"coordinates": [[sLng,sLat], [eLng,eLat]]}
-    header = {"Authorization": args.key, "Content-Type": "application/json"}
+    header = {"Authorization":key, "Content-Type": "application/json"}
     resp = requests.post(endpoint, data=json.dumps(data), headers=header)
-    assert resp.status_code == 200
+    if resp.status_code != 200:
+        raise ConnectionError(resp.status_code)
     resp_data = resp.json()
     coord_list = resp_data['features'][0]['geometry']['coordinates']
     projected_coord_list = []
@@ -53,7 +54,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    out_data = get_route(args.start_latitude,args.start_longitude,args.end_latitude,args.end_longitude,toproj='epsg:3857')
+    out_data = get_route(args.start_latitude,args.start_longitude,args.end_latitude,args.end_longitude,args.key,toproj='epsg:3857')
     with open(args.out, 'w') as f:
         json.dump(out_data, f, indent=4)
 
