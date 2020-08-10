@@ -60,7 +60,7 @@ all_steps = []
 all_props = []
 for route in routes:
     props = route['features'][0]['properties']
-    steps = props['segments'][0]['steps']
+    steps = list(filter(lambda x:x['type'] not in [10,11], props['segments'][0]['steps']))
     all_steps.append(steps)
     all_props.append(props)
     t = 0
@@ -76,8 +76,8 @@ for route in routes:
     single_distances = list(map(lambda x: x['distance'], steps))
     normed_lengths = normed_lengths + normed_length
 
-plt.hist(normed_lengths,weights=weight_lengths,bins=50)
-plt.title("Density of turns along routes")
+plt.hist(normed_lengths,weights=weight_lengths,bins=100)
+plt.title("Density of instructions along routes")
 plt.xlabel("Normalized route length")
 plt.ylabel("Weighted number of turns")
 plt.savefig("turn_density.pdf")
