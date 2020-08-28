@@ -1,5 +1,8 @@
 from time import sleep
 
+import math
+from matplotlib import colors
+
 from main import get_route
 import random
 import os
@@ -56,6 +59,7 @@ def get_routes(num_routes = 500):
 routes = get_routes()
 normed_lengths=[]
 weight_lengths=[]
+route_lengths=[]
 all_steps = []
 all_props = []
 for route in routes:
@@ -69,14 +73,17 @@ for route in routes:
     total_length = props['summary']['distance']
     total_steps = len(steps)
     for step in steps:
+        t += step['distance']
         timesteps.append(t)
         normed_length.append(t / total_length)
         weight_lengths.append(1.0/total_steps)
-        t += step['distance']
+        route_lengths.append(total_length)
+
     single_distances = list(map(lambda x: x['distance'], steps))
     normed_lengths = normed_lengths + normed_length
 
-plt.hist(normed_lengths,weights=weight_lengths,bins=100)
+
+plt.hist(normed_lengths,weights=weight_lengths,bins=50)
 plt.title("Density of instructions along routes")
 plt.xlabel("Normalized route length")
 plt.ylabel("Weighted number of turns")
@@ -98,6 +105,32 @@ plt.hist(list(map(lambda x:x['summary']['distance']/1000,all_props)),bins=10)
 plt.xlabel("Route length in km")
 plt.ylabel("Number of routes")
 plt.savefig("route_length.pdf")
+plt.clf()
+
+bins = {}
+for l, rl,wl in zip(normed_lengths,route_lengths,weight_lengths):
+    index = math.floor(rl/(100 * 1000) )
+    collection =  bins.get(index,[])
+    collection.append(l)
+    bins[index] = collection
+keys = sorted(list(bins.keys()))
+values = list(map(lambda x:bins[x],keys))
+labels = list(map(lambda x:"{0}km-{1}km".format(x*100,(x+1)*100), range(8)))
+
+plt.hist(values,bins=25,histtype="bar",label=labels,density=True)
+plt.legend()
+plt.savefig('categorized_route_length.pdf')
+plt.clf()
+
+
+x = list(map(lambda x:x['summary']['distance']/1000,all_props))
+y = list(map(lambda x:len(x),all_steps))
+plt.hist2d(x,y,bins=13)
+plt.xlabel("Route length in km")
+plt.ylabel("Number of turns")
+cb = plt.colorbar()
+cb.set_label("Number of routes")
+plt.savefig("turn_heatmap.pdf")
 plt.clf()
 
 print(len(all_steps))
