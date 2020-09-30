@@ -23,20 +23,26 @@ def truncate_normal(lower,upper,truncation_times_sigma=4):
         randn = random.normalvariate(mean,stddev)
     return randn
 
-def pick_lat_lng():
-    from_lat = 48.0
-    to_lat=55.0
-    from_lng = 8.0
-    to_lng = 13.0
 
+def get_area():
+    from_lat = float(os.environ.get("FROM_LAT", 48.0))
+    to_lat = float(os.environ.get("TO_LAT", 55.0))
+    from_lng = float(os.environ.get("FROM_LNG", 8.0))
+    to_lng = float(os.environ.get("TO_LNG", 13.0))
+
+    return from_lat,to_lat,from_lng,to_lng
+
+def pick_lat_lng():
+    from_lat, to_lat, from_lng, to_lng = get_area()
     return (truncate_normal(from_lat,to_lat),truncate_normal(from_lng,to_lng))
 
 def get_routes(num_routes = 500):
-    path = "./visroutes-"+str(num_routes)+".json"
+    path = "./visroutes-"+str(get_area()).replace(" ","")+".json"
     if os.path.isfile(path):
         with open(path,'r') as f:
             return json.load(f)
     routes = []
+    print(path)
     while len(routes) < num_routes:
         start = pick_lat_lng()
         end = pick_lat_lng()
