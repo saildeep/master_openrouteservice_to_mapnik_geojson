@@ -89,10 +89,19 @@ for route in routes:
     normed_lengths = normed_lengths + normed_length
 
 
+
+plt.figure(figsize=(12,4))
 plt.hist(normed_lengths,weights=weight_lengths,bins=50)
 plt.title("Density of instructions along routes")
 plt.xlabel("Normalized route length")
 plt.ylabel("Weighted number of turns")
+plt.xlim([0,1.0])
+import numpy as np
+ticks = list(np.arange(0,1.05,.1))
+plt.xticks(ticks,list(map(lambda x:"{:.1f}".format(x),ticks)))
+plt.grid(True,which='both',axis='y')
+plt.tight_layout()
+plt.gca().set_axisbelow(True)
 plt.savefig("turn_density.pdf")
 plt.clf()
 
@@ -129,13 +138,16 @@ plt.savefig('categorized_route_length.pdf')
 plt.clf()
 
 
+plt.figure(figsize=(12,4))
 x = list(map(lambda x:x['summary']['distance']/1000,all_props))
 y = list(map(lambda x:len(x),all_steps))
-_, xedges,yedges,img = plt.hist2d(x,y)
+_, xedges,yedges,img = plt.hist2d(x,y,bins=[25,10])
+
 plt.xlabel("Route length in km")
 plt.ylabel("Number of turns")
 cb = plt.colorbar()
 plt.grid(False)
+plt.tight_layout()
 cb.set_label("Number of routes")
 plt.savefig("turn_heatmap.pdf")
 plt.clf()
