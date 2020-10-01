@@ -99,12 +99,13 @@ plt.xlim([0,1.0])
 import numpy as np
 ticks = list(np.arange(0,1.05,.1))
 plt.xticks(ticks,list(map(lambda x:"{:.1f}".format(x),ticks)))
-plt.grid(True,which='both',axis='y')
+plt.grid(True,which='both',axis='both')
 plt.tight_layout()
 plt.gca().set_axisbelow(True)
 plt.savefig("turn_density.pdf")
 plt.clf()
 
+plt.figure(figsize=(12,4))
 x = list(map(lambda x:x['summary']['distance']/1000,all_props))
 y = list(map(lambda x:len(x),all_steps))
 plt.scatter(x,y,marker=".")
@@ -115,10 +116,15 @@ print("scatter pearsonr", pearsonr(x,y))
 plt.clf()
 
 
-
-plt.hist(list(map(lambda x:x['summary']['distance']/1000,all_props)),bins=10)
+plt.figure(figsize=(12,4))
+plt.hist(list(map(lambda x:x['summary']['distance']/1000,all_props)),bins=list(np.arange(0,800,25)))
+plt.grid(True,which='both',axis='both')
+plt.gca().set_axisbelow(True)
+plt.xlim([0,800])
 plt.xlabel("Route length in km")
 plt.ylabel("Number of routes")
+plt.title("Distribution of route length")
+plt.tight_layout()
 plt.savefig("route_length.pdf")
 plt.clf()
 
