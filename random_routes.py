@@ -88,9 +88,20 @@ for route in routes:
     single_distances = list(map(lambda x: x['distance'], steps))
     normed_lengths = normed_lengths + normed_length
 
+pagewidth = 5.82791 # see https://timodenk.com/blog/exporting-matplotlib-plots-to-latex/
 
+import matplotlib as  mpl
+mpl.rcParams.update({
+    "axes.titlesize":10,
+    "axes.labelsize": 8,
+    "lines.linewidth": 1,
+    "lines.markersize": 8,
+    "xtick.labelsize": 6,
+    "ytick.labelsize": 6,
 
-plt.figure(figsize=(12,4))
+})
+
+plt.figure(figsize=(pagewidth,pagewidth * .33))
 plt.hist(normed_lengths,weights=weight_lengths,bins=50)
 plt.title("Density of instructions along routes")
 plt.xlabel("Normalized route length")
@@ -105,7 +116,7 @@ plt.gca().set_axisbelow(True)
 plt.savefig("turn_density.pdf")
 plt.clf()
 
-plt.figure(figsize=(12,4))
+plt.figure(figsize=(pagewidth,pagewidth * .33))
 x = list(map(lambda x:x['summary']['distance']/1000,all_props))
 y = list(map(lambda x:len(x),all_steps))
 plt.scatter(x,y,marker=".")
@@ -116,11 +127,11 @@ print("scatter pearsonr", pearsonr(x,y))
 plt.clf()
 
 
-plt.figure(figsize=(12,4))
-plt.hist(list(map(lambda x:x['summary']['distance']/1000,all_props)),bins=list(np.arange(0,800,25)))
+plt.figure(figsize=(pagewidth, pagewidth * .33))
+plt.hist(list(map(lambda x:x['summary']['distance']/1000,all_props)),bins=50,cumulative=False)
 plt.grid(True,which='both',axis='both')
 plt.gca().set_axisbelow(True)
-plt.xlim([0,800])
+
 plt.xlabel("Route length in km")
 plt.ylabel("Number of routes")
 plt.title("Distribution of route length")
@@ -144,7 +155,7 @@ plt.savefig('categorized_route_length.pdf')
 plt.clf()
 
 
-plt.figure(figsize=(12,4))
+plt.figure(figsize=(pagewidth,pagewidth * .33))
 x = list(map(lambda x:x['summary']['distance']/1000,all_props))
 y = list(map(lambda x:len(x),all_steps))
 _, xedges,yedges,img = plt.hist2d(x,y,bins=[25,10])
