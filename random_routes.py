@@ -114,6 +114,7 @@ plt.grid(True,which='both',axis='both')
 plt.tight_layout()
 plt.gca().set_axisbelow(True)
 plt.savefig("turn_density.pdf")
+plt.savefig("turn_density.png",dpi=1000)
 plt.clf()
 
 plt.figure(figsize=(pagewidth,pagewidth * .33))
